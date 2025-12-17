@@ -1,0 +1,16 @@
+Package: MarkRankR
+Type: Package
+Title: Evaluation and selection of promotional offers using Fuzzy MCDM
+Version: 0.1.0
+Authors@R: c(
+    person(
+      "Roman", "Ruzhyn",
+      email = "roman.ruzhyn@student.uj.edu.pl",
+      role = c("aut", "cre")
+    )
+  )
+Description: An R package for the evaluation and selection of optimal promotional offers
+    in marketing using Fuzzy VIKOR, Fuzzy COPRAS and Dominance Theory.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
