@@ -1,0 +1,19 @@
+#' Dane do macierzy decyzyjnej dotyczące skuteczności promocji marketingowych
+#'
+#' Zbiór danych zawierający symulowane oceny 10 ekspertów dla 4 rodzajów promocji internetowych,
+#' ocenianych na podstawie 5 głównych kryteriów biznesowych.
+#' Zbiór przeznaczony do użycia z funkcją `przygotuj_dane_mcda()`.
+#'
+#' @format Ramka danych (data frame) z 40 wierszami i 7 zmiennymi:
+#' \describe{
+#' \item{EkspertID}{Identyfikator eksperta marketingowego (1-10)}
+#' \item{Alternatywa}{Rodzaj promocji: Rabat, Konkurs, Program_Lojalnosciowy, Kupony}
+#' \item{koszt_wdrozenia}{Całkowity koszt wdrożenia promocji (zmienna ciągła w PLN)}
+#' \item{wzrost_sprzedazy}{Wpływ na wzrost wolumenu sprzedaży w skali Likerta 1-7}
+#' \item{lojalnosc_klientow}{Wpływ na długoterminową lojalność (1-7)}
+#' \item{atrakcyjnosc_klienta}{Atrakcyjność promocji w oczach klienta w skali 1-9}
+#' \item{latwosc_realizacji}{Łatwość techniczna i operacyjna wdrożenia (1-7), zawiera błędy typu 99}
+#' }
+#' @usage data(promocje_dane_surowe)
+#' @name promocje_dane_surowe
+NULL

@@ -1,0 +1,68 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# MarkRankR
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+Pakiet MarkRankR to kompleksowe narzędzie do Wielokryterialnej Analizy Decyzyjnej (MCDA) w środowisku rozmytym. Umożliwia pełną ścieżkę analityczną: od surowych ankiet, przez wyznaczanie wag metodą BWM (Best-Worst Method), aż po rankingi metodami VIKOR i COPRAS.
+
+## Instalacja
+
+Możesz zainstalować wersję deweloperską z serwisu [GitHub](https://github.com/) (po opublikowaniu):
+
+``` r
+# install.packages("devtools")
+devtools::install_github("ruzrom/MarkRankR")
+```
+
+## Szybki start
+
+Oto podstawowy przykład użycia pakietu z wykorzystaniem wbudowanych danych:
+
+```{r example}
+library(MarkRankR)
+
+# 1. Wczytaj dane
+data("promocje_dane_surowe")
+
+# 2. Przygotuj macierz rozmytą
+# Definiujemy, które kolumny tworzą kryteria
+skladnia <- "
+  Koszt =~ koszt_wdrozenia; 
+  Sprzedaz =~ wzrost_sprzedazy; 
+  Lojalnosc =~ lojalnosc_klientow;
+  Atrakcyjnosc =~ atrakcyjnosc_klienta;
+  Latwosc =~ latwosc_realizacji
+"
+
+macierz <- przygotuj_dane_mcda(promocje_dane_surowe, skladnia, kolumna_alternatyw = "Alternatywa")
+
+# 3. Oblicz ranking metodą Fuzzy COPRAS
+wynik <- rozmyty_copras_promo(
+  macierz, 
+  typy_kryteriow = c("min", "max", "max", "max", "max"),
+  bwm_kryteria = c("Koszt", "Sprzedaz", "Lojalnosc", "Atrakcyjnosc", "Latwosc"),
+  bwm_najlepsze = c(3, 1, 6, 4, 8),
+  bwm_najgorsze = c(6, 8, 3, 2, 1)
+)
+
+# 4. Wyświetl wynik
+print(wynik$wyniki)
+
+# 5. Wyświetl mapę decyzyjną
+plot(wynik)
+```

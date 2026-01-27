@@ -2,3 +2,9 @@
 ^\.Rproj\.user$
 ^cipma_plot\.png$
 ^tam\.csv$
+^data-raw$
+^README\.Rmd$
+^\.gitignore$
+^LICENSE\.md$
+^doc$
+^Meta$
