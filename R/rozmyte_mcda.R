@@ -118,6 +118,8 @@ oblicz_wagi_entropii <- function(macierz_decyzyjna) {
 rozmyty_vikor_promo <- function(macierz_decyzyjna, typy_kryteriow, v = 0.5, wagi = NULL,
                           bwm_kryteria, bwm_najlepsze, bwm_najgorsze) {
 
+  if (!is.matrix(macierz_decyzyjna)) stop("'macierz_decyzyjna' musi być macierzą.")
+
   finalne_wagi <- .pobierz_finalne_wagi(macierz_decyzyjna, wagi, bwm_kryteria, bwm_najlepsze, bwm_najgorsze)
   n_kolumn <- ncol(macierz_decyzyjna)
 
@@ -159,8 +161,7 @@ rozmyty_vikor_promo <- function(macierz_decyzyjna, typy_kryteriow, v = 0.5, wagi
   }
 
   # Mnożenie przez wagi
-  W_diag <- diag(finalne_wagi)
-  macierz_wazona_d <- macierz_d %*% W_diag
+  macierz_wazona_d <- macierz_d * rep(finalne_wagi, each = nrow(macierz_d))
 
   # 3. Wartości S (suma) i R (max)
   S_rozmyte <- matrix(0, nrow(macierz_decyzyjna), 3)
@@ -208,7 +209,8 @@ rozmyty_vikor_promo <- function(macierz_decyzyjna, typy_kryteriow, v = 0.5, wagi
   wynik <- list(
     wyniki = ramka_wynikow,
     detale = list(S_rozmyte = S_rozmyte, R_rozmyte = R_rozmyte, Q_rozmyte = Q_rozmyte),
-    parametry = list(v = v)
+    parametry = list(v = v),
+    metoda = "VIKOR"
   )
 
   class(wynik) <- "rozmyty_vikor_promo_wynik"
@@ -233,16 +235,51 @@ rozmyty_vikor_promo <- function(macierz_decyzyjna, typy_kryteriow, v = 0.5, wagi
 rozmyty_copras_promo <- function(macierz_decyzyjna, typy_kryteriow, wagi = NULL,
                            bwm_kryteria, bwm_najlepsze, bwm_najgorsze) {
 
+  if (!is.matrix(macierz_decyzyjna)) stop("'macierz_decyzyjna' musi być macierzą.")
+
   # 1. Przygotowanie wag
   finalne_wagi <- .pobierz_finalne_wagi(macierz_decyzyjna, wagi, bwm_kryteria, bwm_najlepsze, bwm_najgorsze)
 
   n_alt <- nrow(macierz_decyzyjna)
-  n_kryt <- ncol(macierz_decyzyjna) / 3
+  n_kolumn <- ncol(macierz_decyzyjna)
+  n_kryt <- n_kolumn / 3
 
-  # 2. Macierz ważona
-  macierz_wazona <- macierz_decyzyjna * rep(finalne_wagi, each = n_alt)
+  # 2. Rozszerzenie typów kryteriów
+  typy_rozmyte <- character(n_kolumn)
+  k <- 1
+  for (j in seq(1, n_kolumn, 3)) {
+    typy_rozmyte[j:(j+2)] <- typy_kryteriow[k]
+    k <- k + 1
+  }
 
-  # 3. Sumy S+ i S-
+  # 3. Normalizacja
+  macierz_d <- matrix(0, nrow = n_alt, ncol = n_kolumn)
+
+  for (i in seq(1, n_kolumn, 3)) {
+    idx <- i:(i+2)
+    if (typy_rozmyte[i] == "max") {
+
+      # Wartość znormalizowana = x / max(u)
+      max_u <- max(macierz_decyzyjna[, i+2])
+      if(max_u == 0) max_u <- 1e-9
+
+      macierz_d[, idx] <- macierz_decyzyjna[, idx] / max_u
+    } else {
+      # Wartość znormalizowana = min(l) / x
+      # Przy odwracaniu TFN (l, m, u) -> (min_l/u, min_l/m, min_l/l)
+      min_l <- min(macierz_decyzyjna[, i])
+      if(min_l == 0) min_l <- 1e-9
+
+      macierz_d[, i]   <- min_l / macierz_decyzyjna[, i+2]
+      macierz_d[, i+1] <- min_l / macierz_decyzyjna[, i+1]
+      macierz_d[, i+2] <- min_l / macierz_decyzyjna[, i]
+    }
+  }
+
+  # 4. Macierz ważona
+  macierz_wazona <- macierz_d * rep(finalne_wagi, each = n_alt)
+
+  # 5. Sumy S+ i S-
   S_plus <- matrix(0, n_alt, 3)
   S_minus <- matrix(0, n_alt, 3)
 
@@ -255,7 +292,7 @@ rozmyty_copras_promo <- function(macierz_decyzyjna, typy_kryteriow, wagi = NULL,
     }
   }
 
-  # 4. Obliczanie Qi
+  # 6. Obliczanie Qi
   def_S_minus <- (S_minus[, 1] + S_minus[, 2] + S_minus[, 3]) / 3
   sum_inv_S_minus <- sum(1 / (def_S_minus + 1e-9))
   sum_def_S_minus <- sum(def_S_minus)
@@ -266,7 +303,7 @@ rozmyty_copras_promo <- function(macierz_decyzyjna, typy_kryteriow, wagi = NULL,
     Q_rozmyte[i, ] <- S_plus[i, ] + korekta
   }
 
-  # 5. Defuzyfikacja i Ui
+  # 7. Defuzyfikacja i Ui
   def_Q <- (Q_rozmyte[, 1] + Q_rozmyte[, 2] + Q_rozmyte[, 3]) / 3
   U <- (def_Q / max(def_Q)) * 100
 
@@ -279,9 +316,103 @@ rozmyty_copras_promo <- function(macierz_decyzyjna, typy_kryteriow, wagi = NULL,
 
   wynik <- list(
     wyniki = ramka_wynikow,
-    detale = list(S_plus = S_plus, S_minus = S_minus, Q_rozmyte = Q_rozmyte)
+    detale = list(S_plus = S_plus, S_minus = S_minus, Q_rozmyte = Q_rozmyte),
+    metoda = "COPRAS"
   )
 
   class(wynik) <- "rozmyty_copras_promo_wynik"
+  return(wynik)
+}
+
+
+#' Rozmyta Metoda TOPSIS
+#'
+#' @description Rozmyta metoda TOPSIS służy do wyznaczania rankingu alternatyw na podstawie
+#' ich odległości od rozwiązania idealnego oraz anty-idealnego.
+#'
+#' @param macierz_decyzyjna Rozmyta macierz decyzyjna (wynik funkcji przygotuj_dane_mcda).
+#' @param typy_kryteriow Wektor tekstowy określający charakter kryteriów ("min" lub "max").
+#' @param wagi Opcjonalny wektor wag. Jeśli brak, zostaną pobrane z atrybutów lub BWM.
+#' @param bwm_kryteria (Opcjonalnie) Nazwy kryteriów dla BWM.
+#' @param bwm_najlepsze (Opcjonalnie) Wektor Best-to-Others.
+#' @param bwm_najgorsze (Opcjonalnie) Wektor Others-to-Worst.
+#' @return Obiekt klasy `rozmyty_topsis_promo_wynik`.
+#' @export
+rozmyty_topsis_promo <- function(macierz_decyzyjna, typy_kryteriow, wagi = NULL,
+                                 bwm_kryteria, bwm_najlepsze, bwm_najgorsze) {
+
+  if (!is.matrix(macierz_decyzyjna)) stop("'macierz_decyzyjna' musi być macierzą.")
+
+  # 1. Przygotowanie wag
+  finalne_wagi <- .pobierz_finalne_wagi(macierz_decyzyjna, wagi, bwm_kryteria, bwm_najlepsze, bwm_najgorsze)
+
+  # 2. Rozszerzenie typów kryteriów
+  n_kolumn <- ncol(macierz_decyzyjna)
+  typy_rozmyte <- character(n_kolumn)
+  k <- 1
+  for (j in seq(1, n_kolumn, 3)) {
+    typy_rozmyte[j:(j+2)] <- typy_kryteriow[k]
+    k <- k + 1
+  }
+
+  # 3. Normalizacja
+  macierz_d <- matrix(nrow = nrow(macierz_decyzyjna), ncol = n_kolumn)
+  denoms <- sqrt(apply(macierz_decyzyjna^2, 2, sum))
+
+  for (i in seq(1, n_kolumn, 3)) {
+    macierz_d[, i]   <- macierz_decyzyjna[, i]   / denoms[i + 2]
+    macierz_d[, i+1] <- macierz_decyzyjna[, i+1] / denoms[i + 1]
+    macierz_d[, i+2] <- macierz_decyzyjna[, i+2] / denoms[i]
+  }
+
+  # 4. Uwzględnienie wag kryteriów
+  macierz_wazona_d <- macierz_d * rep(finalne_wagi, each = nrow(macierz_d))
+
+  # 5. Rozwiązania Idealne
+  idea_poz <- ifelse(typy_rozmyte == "max", apply(macierz_wazona_d, 2, max), apply(macierz_wazona_d, 2, min))
+  idea_neg <- ifelse(typy_rozmyte == "min", apply(macierz_wazona_d, 2, max), apply(macierz_wazona_d, 2, min))
+
+  # 6. Obliczenie odległości euklidesowych w przestrzeni rozmytej
+  roznice_poz <- (macierz_wazona_d - matrix(idea_poz, nrow=nrow(macierz_decyzyjna), ncol=n_kolumn, byrow=TRUE))^2
+  roznice_neg <- (macierz_wazona_d - matrix(idea_neg, nrow=nrow(macierz_decyzyjna), ncol=n_kolumn, byrow=TRUE))^2
+
+  D_poz_rozmyte <- matrix(0, nrow(macierz_decyzyjna), 3)
+  D_neg_rozmyte <- matrix(0, nrow(macierz_decyzyjna), 3)
+
+  D_poz_rozmyte[,1] <- sqrt(apply(roznice_poz[, seq(1, n_kolumn, 3), drop=FALSE], 1, sum))
+  D_poz_rozmyte[,2] <- sqrt(apply(roznice_poz[, seq(2, n_kolumn, 3), drop=FALSE], 1, sum))
+  D_poz_rozmyte[,3] <- sqrt(apply(roznice_poz[, seq(3, n_kolumn, 3), drop=FALSE], 1, sum))
+
+  D_neg_rozmyte[,1] <- sqrt(apply(roznice_neg[, seq(1, n_kolumn, 3), drop=FALSE], 1, sum))
+  D_neg_rozmyte[,2] <- sqrt(apply(roznice_neg[, seq(2, n_kolumn, 3), drop=FALSE], 1, sum))
+  D_neg_rozmyte[,3] <- sqrt(apply(roznice_neg[, seq(3, n_kolumn, 3), drop=FALSE], 1, sum))
+
+  # 7. Współczynnik bliskości / Closeness Coefficient (R)
+  denom <- D_neg_rozmyte + D_poz_rozmyte
+  R_rozmyte <- matrix(0, nrow(macierz_decyzyjna), 3)
+  R_rozmyte[,1] <- D_neg_rozmyte[,1] / denom[,3]
+  R_rozmyte[,2] <- D_neg_rozmyte[,2] / denom[,2]
+  R_rozmyte[,3] <- D_neg_rozmyte[,3] / denom[,1]
+
+  def_C <- (R_rozmyte[,1] + 4*R_rozmyte[,2] + R_rozmyte[,3]) / 6
+
+  # 8. Defuzyfikacja i przygotowanie danych wynikowych
+  def_D_poz <- rowMeans(D_poz_rozmyte)
+  def_D_neg <- rowMeans(D_neg_rozmyte)
+
+  ramka_wynikow <- data.frame(
+    Alternatywa = rownames(macierz_decyzyjna),
+    D_plus = def_D_poz,
+    D_minus = def_D_neg,
+    Score = def_C,
+    Ranking = rank(-def_C, ties.method = "first")
+  )
+
+  wynik <- list(
+    wyniki = ramka_wynikow,
+    detale = list(D_poz_rozmyte = D_poz_rozmyte, D_neg_rozmyte = D_neg_rozmyte, R_rozmyte = R_rozmyte),
+    metoda = "TOPSIS"
+  )
+  class(wynik) <- "rozmyty_topsis_promo_wynik"
   return(wynik)
 }

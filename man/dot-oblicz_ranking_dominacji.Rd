@@ -4,12 +4,10 @@
 \alias{.oblicz_ranking_dominacji}
 \title{Teoria Dominacji dla Rankingu}
 \usage{
-.oblicz_ranking_dominacji(r1, r2)
+.oblicz_ranking_dominacji(macierz_rang)
 }
 \arguments{
-\item{r1}{Wektor numeryczny rang metody 1.}
-
-\item{r2}{Wektor numeryczny rang metody 2.}
+\item{macierz_rang}{Macierz (wiersze = alternatywy, kolumny = metody).}
 }
 \value{
 Wektor numeryczny z finalnym rankingiem.

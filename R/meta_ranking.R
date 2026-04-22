@@ -3,48 +3,43 @@
 #' Funkcja pomocnicza. Wyznacza ranking konsensusu na podstawie reguły większości.
 #' Iteracyjnie sprawdza, która alternatywa najczęściej wygrywa na danej pozycji.
 #'
-#' @param r1 Wektor numeryczny rang metody 1.
-#' @param r2 Wektor numeryczny rang metody 2.
+#' @param macierz_rang Macierz (wiersze = alternatywy, kolumny = metody).
 #' @return Wektor numeryczny z finalnym rankingiem.
 #' @keywords internal
-.oblicz_ranking_dominacji <- function(r1, r2) {
-  n <- length(r1)
-  finalny_ranking <- rep(0, n)
+.oblicz_ranking_dominacji <- function(macierz_rang) {
 
-  # Macierz rang (wiersze = alternatywy, kolumny = metody)
-  macierz_rang <- cbind(r1, r2)
+  n <- nrow(macierz_rang)
+  n_metod <- ncol(macierz_rang)
+  finalny_ranking <- rep(0, n)
 
   # Maska dostepnych alternatyw (na początku wszystkie są dostępne)
   dostepne <- rep(TRUE, n)
 
-  for (obecna_pozycja in 1:n) {
+  for (pozycja in 1:n) {
     # Pobieramy rangi tylko dla dostepnych alternatyw (reszte zamieniamy na Inf)
-    obecna_macierz <- macierz_rang
-    obecna_macierz[!dostepne, ] <- Inf
+    macierz <- macierz_rang
+    macierz[!dostepne, ] <- Inf
 
     # Kto ma najlepszą (najniższą) rangę w każdej metodzie?
-    najlepszy_r1 <- which.min(obecna_macierz[, 1])
-    najlepszy_r2 <- which.min(obecna_macierz[, 2])
+    kandydaci <- apply(macierz, 2, which.min)
 
-    if (najlepszy_r1 == najlepszy_r2) {
-      zwyciezca_idx <- najlepszy_r1
+    tabela_cz <- table(kandydaci)
+
+    maks_gl <- max(tabela_cz)
+    najlepsze <- as.numeric(names(tabela_cz)[tabela_cz == maks_gl])
+
+    if (length(najlepsze) == 1) {
+      najlepszy_idx <- najlepsze
     } else {
-      # Brak zgody (1vs1)
-      # Sprawdzamy, który kandydat ma lepszą sumę rang
-      suma_r1 <- sum(macierz_rang[najlepszy_r1, ])
-      suma_r2 <- sum(macierz_rang[najlepszy_r2, ])
+      # Brak zgody
+      # Sprawdzamy, który kandydat ma min sumę rang
+      sumy <- rowSums(macierz_rang[najlepsze, , drop = FALSE])
 
-      if (suma_r1 < suma_r2) {
-        zwyciezca_idx <- najlepszy_r1
-      } else if (suma_r2 < suma_r1) {
-        zwyciezca_idx <- najlepszy_r2
-      } else {
-        zwyciezca_idx <- najlepszy_r1
-      }
+      najlepszy_idx <- najlepsze[which.min(sumy)]
     }
 
-    finalny_ranking[zwyciezca_idx] <- obecna_pozycja
-    dostepne[zwyciezca_idx] <- FALSE
+    finalny_ranking[najlepszy_idx] <- pozycja
+    dostepne[najlepszy_idx] <- FALSE
   }
 
   return(finalny_ranking)
@@ -52,7 +47,7 @@
 
 #' @title Rozmyty Meta-Ranking
 #' @description
-#' Agreguje wyniki z metod Fuzzy VIKOR, TOPSIS i WASPAS, aby stworzyć
+#' Agreguje wyniki z metod Fuzzy VIKOR, TOPSIS i COPRAS, aby stworzyć
 #' jeden, robustny ranking konsensusu.
 #'
 #' @param macierz_decyzyjna Rozmyta macierz danych.
@@ -60,7 +55,6 @@
 #' @param wagi (Opcjonalnie) Wagi kryteriów.
 #' @param bwm_najlepsze (Opcjonalnie) Wektor BWM Best-to-Others.
 #' @param bwm_najgorsze (Opcjonalnie) Wektor BWM Others-to-Worst.
-#' @param lambda Parametr dla WASPAS (domyślnie 0.5).
 #' @param v Parametr dla VIKOR (domyślnie 0.5).
 #'
 #' @return Lista zawierająca ramkę danych z porównaniem rankingów oraz macierz korelacji.
@@ -72,7 +66,6 @@ rozmyty_meta_ranking <- function(macierz_decyzyjna,
                                  wagi = NULL,
                                  bwm_najlepsze = NULL,
                                  bwm_najgorsze = NULL,
-                                 lambda = 0.5,
                                  v = 0.5) {
 
   # 1. Sprawdzenie wag (jesli brak BWM i brak wag recznych -> licz Entropie)
@@ -101,26 +94,30 @@ rozmyty_meta_ranking <- function(macierz_decyzyjna,
   # COPRAS
   res_copras <- do.call(rozmyty_copras_promo, args_baza)
 
+  # TOPSIS
+  res_topsis <- do.call(rozmyty_topsis_promo, args_baza)
+
 
   # 3. Ekstrakcja Rankingów (same wektory liczb całkowitych)
   r_vikor <- res_vikor$wyniki$Ranking
   r_copras <- res_copras$wyniki$Ranking
+  r_topsis <- res_topsis$wyniki$Ranking
 
   # 4. Agregacja Rankingów
 
   # A. Suma Rang (Im mniej tym lepiej)
-  suma_pkt <- r_vikor + r_copras
+  suma_pkt <- r_vikor + r_copras + r_topsis
   ranking_suma <- rank(suma_pkt, ties.method = "first")
 
   # B. Teoria Dominacji
-  ranking_dominacja <- .oblicz_ranking_dominacji(r_vikor, r_copras)
+  macierz_rang = cbind(r_vikor, r_copras, r_topsis)
+  ranking_dominacja <- .oblicz_ranking_dominacji(macierz_rang)
 
   # C. RankAggreg (Algorytm Brute Force)
-  # RankAggreg wymaga listy uporządkowanych indeksów, a nie wektora rang!
-  # order() zamienia [RangaAlt1=2, RangaAlt2=1] na [2, 1] (czyli: Index2 wygrywa, Index1 drugi)
   macierz_dla_ra <- rbind(
     order(r_vikor),
-    order(r_copras)
+    order(r_copras),
+    order(r_topsis)
   )
 
   n_alt <- nrow(macierz_decyzyjna)
@@ -149,6 +146,7 @@ rozmyty_meta_ranking <- function(macierz_decyzyjna,
     Alternatywa = rownames(macierz_decyzyjna),
     R_VIKOR = r_vikor,
     R_COPRAS = r_copras,
+    R_TOPSIS = r_topsis,
     Meta_Suma = ranking_suma,
     Meta_Dominacja = ranking_dominacja,
     Meta_Agregacja = wektor_ra

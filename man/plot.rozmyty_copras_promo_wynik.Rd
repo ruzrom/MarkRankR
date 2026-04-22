@@ -13,6 +13,4 @@
 }
 \description{
 Wizualizacja wyników metody COPRAS w układzie dwuwymiarowym.
-Oś X: Suma korzyści (S+). Oś Y: Suma kosztów (S-).
-Wielkość bąbla: Stopień użyteczności (Ui).
 }

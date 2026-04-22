@@ -15,6 +15,6 @@ tabela_apa(x, tytul = NULL)
 Obiekt klasy `flextable` gotowy do druku lub zapisu do Worda.
 }
 \description{
-Funkcja przekształca wyniki analizy MCDA (TOPSIS, VIKOR, WASPAS, Meta-Ranking)
+Funkcja przekształca wyniki analizy MCDA (TOPSIS, VIKOR, COPRAS, Meta-Ranking)
 w sformatowaną tabelę zgodną ze standardem APA, gotową do publikacji w Wordzie.
 }

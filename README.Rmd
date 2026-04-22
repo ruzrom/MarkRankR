@@ -65,4 +65,5 @@ print(wynik$wyniki)
 
 # 5. Wyświetl mapę decyzyjną
 plot(wynik)
+
 ```

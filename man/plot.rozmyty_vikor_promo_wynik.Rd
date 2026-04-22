@@ -12,7 +12,5 @@
 \item{...}{Dodatkowe argumenty (ignorowane).}
 }
 \description{
-Wizualizacja typu cIPMA.
-Oś X: Efektywność grupowa (odwrócone S). Oś Y: Ryzyko/Żal (R).
-Wielkość bąbla: Siła kompromisu (zależna od Q).
+Wizualizacja wyników metody VIKOR w układzie dwuwymiarowym.
 }

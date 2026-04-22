@@ -69,7 +69,7 @@ bwm_best <- c(3, 1, 6, 4, 8)
 bwm_worst <- c(6, 8, 3, 2, 1)
 ```
 
-## 5. Analiza Decyzyjna (VIKOR, COPRAS)
+## 5. Analiza Decyzyjna (VIKOR, COPRAS, TOPSIS)
 
 Uruchamiamy metody. Pakiet automatycznie policzy wagi z parametrów BWM. Definiujemy typy kryteriów: min (koszt) lub max (zysk).
 ```{r}
@@ -91,9 +91,18 @@ typy <- c("min", "max", "max", "max", "max")
   bwm_najgorsze = bwm_worst
 )
 
+# Fuzzy TOPSIS
+  wynik_topsis <- rozmyty_topsis_promo(
+  macierz_decyzyjna = macierz_rozmyta,
+  typy_kryteriow = typy,
+  bwm_najlepsze = bwm_best,
+  bwm_najgorsze = bwm_worst
+)
+
 # Wyniki tabelaryczne
 print(wynik_vikor$wyniki)
 print(wynik_copras$wyniki)
+print(wynik_topsis$wyniki)
 ```
 ## 6. Wizualizacja (Mapy Decyzyjne)
 
@@ -101,6 +110,7 @@ Generujemy mapy strategiczne.
 ```{r, fig.width=7, fig.height=5}
 plot(wynik_vikor)
 plot(wynik_copras)
+plot(wynik_topsis)
 ```
 
 ## 7. Meta-Ranking (Konsensus)

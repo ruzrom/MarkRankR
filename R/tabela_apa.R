@@ -1,6 +1,6 @@
 #' @title Generowanie Tabeli APA
 #' @description
-#' Funkcja przekształca wyniki analizy MCDA (TOPSIS, VIKOR, WASPAS, Meta-Ranking)
+#' Funkcja przekształca wyniki analizy MCDA (TOPSIS, VIKOR, COPRAS, Meta-Ranking)
 #' w sformatowaną tabelę zgodną ze standardem APA, gotową do publikacji w Wordzie.
 #'
 #' @param x Obiekt wynikowy z funkcji pakietu (np. `rozmyty_topsis_wynik`).
@@ -49,6 +49,24 @@ tabela_apa.rozmyty_vikor_promo_wynik <- function(x, tytul = "Wyniki metody Fuzzy
 
 
 #' @export
+tabela_apa.rozmyty_topsis_promo_wynik <- function(x, tytul = "Wyniki metody Fuzzy TOPSIS") {
+  df <- x$wyniki
+
+  names(df) <- c("Alternatywa", "D+", "D-", "C (Bliskość)", "Ranking")
+
+  df$`D+` <- round(df$`D+`, 4)
+  df$`D-` <- round(df$`D-`, 4)
+  df$`C (Bliskość)` <- round(df$`C (Bliskość)`, 4)
+
+  rempsyc::nice_table(
+    df,
+    title = c("Tabela 3", tytul),
+    note = c("Uwaga. D+: odległość od rozwiązania idealnego, D-: odległość od rozwiązania anty-idealnego, C: współczynnik bliskości (im większy tym lepiej).")
+  )
+}
+
+
+#' @export
 tabela_apa.list <- function(x, tytul = "Meta-Ranking (Konsensus)") {
   # Obsługa Meta-Rankingu
   if(is.null(x$porownanie)) stop("To nie jest obiekt meta-rankingu.")
@@ -60,7 +78,7 @@ tabela_apa.list <- function(x, tytul = "Meta-Ranking (Konsensus)") {
 
   rempsyc::nice_table(
     df,
-    title = c("Tabela 3", tytul),
+    title = c("Tabela 4", tytul),
     note = c("Zestawienie rang uzyskanych różnymi metodami oraz rankingi konsensusu.")
   )
 }
