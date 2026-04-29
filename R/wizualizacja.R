@@ -1,6 +1,7 @@
 #' @title Wewnętrzny motyw graficzny
 #' @description Ujednolicony styl wykresów dla całego pakietu.
 #' @import ggplot2
+#' @importFrom stats median
 #' @keywords internal
 .motyw_mcda <- function() {
   list(
@@ -199,7 +200,7 @@ utils::globalVariables(c(
   "Def_S", "Def_R", "Def_Q",                  # VIKOR
   "S_plus_def", "S_minus_def", "Uzytecznosc_Ui", # COPRAS
   "D_plus", "D_minus", "Score",               # TOPSIS
-  "Wydajnosc", "Rozmiar",                     # Parametry wizualne VIKOR
+  "Wydajnosc", "Rozmiar", "WizOdl",           # Parametry wizualne
   "OdlegloscWizualna", "Spojnosc",            # Inne parametry graficzne
   "Alternatywa"                               # Klucz alternatyw
 ))

@@ -57,11 +57,11 @@ wynik <- rozmyty_copras_promo(
 
 # 4. Wyświetl wynik
 print(wynik$wyniki)
-#>             Alternatywa Piorytety_Qi Uzytecznosc_Ui Ranking
-#> 1               Konkurs       0.6632          80.95       4
-#> 2                Kupony       0.8193         100.00       1
-#> 3 Program_Lojalnosciowy       0.7486          91.37       2
-#> 4                 Rabat       0.7333          89.51       3
+#>                                 Alternatywa Piorytety_Qi Uzytecznosc_Ui Ranking
+#> Konkurs                             Konkurs       0.2357          88.83       4
+#> Kupony                               Kupony       0.2582          97.32       2
+#> Program_Lojalnosciowy Program_Lojalnosciowy       0.2407          90.73       3
+#> Rabat                                 Rabat       0.2653         100.00       1
 
 # 5. Wyświetl mapę decyzyjną
 plot(wynik)

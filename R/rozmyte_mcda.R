@@ -106,7 +106,7 @@ oblicz_wagi_entropii <- function(macierz_decyzyjna) {
 #' @description Metoda kompromisowa VIKOR. Oblicza wskaźniki S (użyteczność grupy),
 #' R (indywidualny żal) oraz Q (indeks kompromisu).
 #'
-#' @param macierz_decyzyjna Macierz ($m \times 3n$).
+#' @param macierz_decyzyjna Macierz o wymiarach \eqn{m \times 3n}.
 #' @param typy_kryteriow Wektor znakowy ("max" dla zysku, "min" dla kosztu).
 #' @param wagi (Opcjonalnie) Wektor wag.
 #' @param bwm_kryteria (Opcjonalnie) Nazwy kryteriów dla BWM.
@@ -214,113 +214,6 @@ rozmyty_vikor_promo <- function(macierz_decyzyjna, typy_kryteriow, v = 0.5, wagi
   )
 
   class(wynik) <- "rozmyty_vikor_promo_wynik"
-  return(wynik)
-}
-
-
-#' Rozmyta Metoda COPRAS (Complex Proportional Assessment)
-#'
-#' @description Funkcja realizuje algorytm Fuzzy COPRAS do oceny wielokryterialnej.
-#' Metoda ta wyznacza ranking alternatyw na podstawie ich względnego priorytetu (Qi)
-#' oraz stopnia użyteczności (Ui).
-#'
-#' @param macierz_decyzyjna Rozmyta macierz decyzyjna (wynik funkcji przygotuj_dane_mcda).
-#' @param typy_kryteriow Wektor tekstowy określający charakter kryteriów ("min" lub "max").
-#' @param wagi Opcjonalny wektor wag. Jeśli brak, zostaną pobrane z atrybutów lub BWM.
-#' @param bwm_kryteria (Opcjonalnie) Nazwy kryteriów dla BWM.
-#' @param bwm_najlepsze (Opcjonalnie) Wektor Best-to-Others.
-#' @param bwm_najgorsze (Opcjonalnie) Wektor Others-to-Worst.
-#' @return Obiekt klasy `rozmyty_copras_promo_wynik`.
-#' @export
-rozmyty_copras_promo <- function(macierz_decyzyjna, typy_kryteriow, wagi = NULL,
-                           bwm_kryteria, bwm_najlepsze, bwm_najgorsze) {
-
-  if (!is.matrix(macierz_decyzyjna)) stop("'macierz_decyzyjna' musi być macierzą.")
-
-  # 1. Przygotowanie wag
-  finalne_wagi <- .pobierz_finalne_wagi(macierz_decyzyjna, wagi, bwm_kryteria, bwm_najlepsze, bwm_najgorsze)
-
-  n_alt <- nrow(macierz_decyzyjna)
-  n_kolumn <- ncol(macierz_decyzyjna)
-  n_kryt <- n_kolumn / 3
-
-  # 2. Rozszerzenie typów kryteriów
-  typy_rozmyte <- character(n_kolumn)
-  k <- 1
-  for (j in seq(1, n_kolumn, 3)) {
-    typy_rozmyte[j:(j+2)] <- typy_kryteriow[k]
-    k <- k + 1
-  }
-
-  # 3. Normalizacja
-  macierz_d <- matrix(0, nrow = n_alt, ncol = n_kolumn)
-
-  for (i in seq(1, n_kolumn, 3)) {
-    idx <- i:(i+2)
-    if (typy_rozmyte[i] == "max") {
-
-      # Wartość znormalizowana = x / max(u)
-      max_u <- max(macierz_decyzyjna[, i+2])
-      if(max_u == 0) max_u <- 1e-9
-
-      macierz_d[, idx] <- macierz_decyzyjna[, idx] / max_u
-    } else {
-      # Wartość znormalizowana = min(l) / x
-      # Przy odwracaniu TFN (l, m, u) -> (min_l/u, min_l/m, min_l/l)
-      min_l <- min(macierz_decyzyjna[, i])
-      if(min_l == 0) min_l <- 1e-9
-
-      macierz_d[, i]   <- min_l / macierz_decyzyjna[, i+2]
-      macierz_d[, i+1] <- min_l / macierz_decyzyjna[, i+1]
-      macierz_d[, i+2] <- min_l / macierz_decyzyjna[, i]
-    }
-  }
-
-  # 4. Macierz ważona
-  macierz_wazona <- macierz_d * rep(finalne_wagi, each = n_alt)
-
-  # 5. Sumy S+ i S-
-  S_plus <- matrix(0, n_alt, 3)
-  S_minus <- matrix(0, n_alt, 3)
-
-  for (j in 1:n_kryt) {
-    idx <- ((j - 1) * 3 + 1):(j * 3)
-    if (typy_kryteriow[j] == "max") {
-      S_plus <- S_plus + macierz_wazona[, idx]
-    } else {
-      S_minus <- S_minus + macierz_wazona[, idx]
-    }
-  }
-
-  # 6. Obliczanie Qi
-  def_S_minus <- (S_minus[, 1] + S_minus[, 2] + S_minus[, 3]) / 3
-  sum_inv_S_minus <- sum(1 / (def_S_minus + 1e-9))
-  sum_def_S_minus <- sum(def_S_minus)
-
-  Q_rozmyte <- matrix(0, n_alt, 3)
-  for (i in 1:n_alt) {
-    korekta <- sum_def_S_minus / (def_S_minus[i] * sum_inv_S_minus + 1e-9)
-    Q_rozmyte[i, ] <- S_plus[i, ] + korekta
-  }
-
-  # 7. Defuzyfikacja i Ui
-  def_Q <- (Q_rozmyte[, 1] + Q_rozmyte[, 2] + Q_rozmyte[, 3]) / 3
-  U <- (def_Q / max(def_Q)) * 100
-
-  ramka_wynikow <- data.frame(
-    Alternatywa = rownames(macierz_decyzyjna),
-    Piorytety_Qi = round(def_Q, 4),
-    Uzytecznosc_Ui = round(U, 2),
-    Ranking = rank(-def_Q, ties.method = "first")
-  )
-
-  wynik <- list(
-    wyniki = ramka_wynikow,
-    detale = list(S_plus = S_plus, S_minus = S_minus, Q_rozmyte = Q_rozmyte),
-    metoda = "COPRAS"
-  )
-
-  class(wynik) <- "rozmyty_copras_promo_wynik"
   return(wynik)
 }
 
