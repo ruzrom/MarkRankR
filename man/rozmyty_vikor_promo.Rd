@@ -15,7 +15,7 @@ rozmyty_vikor_promo(
 )
 }
 \arguments{
-\item{macierz_decyzyjna}{Macierz ($m \times 3n$).}
+\item{macierz_decyzyjna}{Macierz o wymiarach \eqn{m \times 3n}.}
 
 \item{typy_kryteriow}{Wektor znakowy ("max" dla zysku, "min" dla kosztu).}
 

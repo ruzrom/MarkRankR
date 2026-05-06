@@ -86,7 +86,8 @@
 #' @param kolumna_alternatyw Nazwa kolumny identyfikującej alternatywy.
 #' Jeśli NULL, każdy wiersz traktowany jest jako osobna alternatywa.
 #' @param funkcja_agregacji Funkcja używana do scalania opinii ekspertów (domyślnie: mean).
-#' @return Macierz o wymiarach ($m \times 3n$), gdzie m to liczba alternatyw.
+#' @return Macierz o wymiarach \eqn{m \times 3n}, gdzie \eqn{m} to liczba alternatyw.
+#' @importFrom stats aggregate
 #' @export
 przygotuj_dane_mcda <- function(dane, skladnia, kolumna_alternatyw = NULL, funkcja_agregacji = mean) {
 

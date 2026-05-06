@@ -22,7 +22,7 @@ Jeśli NULL, każdy wiersz traktowany jest jako osobna alternatywa.}
 \item{funkcja_agregacji}{Funkcja używana do scalania opinii ekspertów (domyślnie: mean).}
 }
 \value{
-Macierz o wymiarach ($m \times 3n$), gdzie m to liczba alternatyw.
+Macierz o wymiarach \eqn{m \times 3n}, gdzie \eqn{m} to liczba alternatyw.
 }
 \description{
 Funkcja przekształca surowe dane ankietowe w rozmytą macierz decyzyjną.
