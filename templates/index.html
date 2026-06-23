@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ranking MArketingowy MCDA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    html { scroll-behavior: smooth; }
+    .chart-box {
+      position: relative;
+      width: 100%;
+      height: 360px;
+      min-height: 300px;
+      max-height: 460px;
+    }
+    code, pre { font-variant-ligatures: none; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 selection:bg-sky-100 selection:text-sky-900">
+  <nav class="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+      <div class="flex items-center gap-3">
+        <div class="flex h-9 w-9 items-center justify-center rounded bg-sky-700 font-bold text-white">MC</div>
+        <div>
+          <p class="text-sm font-bold uppercase tracking-wide text-slate-900">MarkRankR: Pakiet R wspomagający wybór optymalnych ofert promocyjnych w działaniach marketingowych</p>
+          <p class="text-xs text-slate-500">Roman Ruzhyn, 2026</p>
+        </div>
+      </div>
+      <div class="hidden items-center gap-5 text-sm font-medium text-slate-600 md:flex">
+        <a href="#problem" class="hover:text-sky-700">Problem</a>
+        <a href="#dane" class="hover:text-sky-700">Dane</a>
+        <a href="#wyniki" class="hover:text-sky-700">Wyniki</a>
+        <a href="#odtworzenie" class="hover:text-sky-700">Odtworzenie</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <section id="problem" class="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+      <div class="rounded border border-slate-200 bg-white p-6 shadow-sm">
+        <p class="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-sky-700">Sekcja 1</p>
+        <h1 class="text-3xl font-extrabold tracking-tight text-slate-950 sm:text-4xl">MarkRankR w prostym języku</h1>
+        <p class="mt-4 max-w-3xl text-lg leading-8 text-slate-600">
+          W marketingu różnego rodzaju promocje i konkursy to obecnie standard w działaniach mających na celu zwiększenie lojalności klientów i podniesienie obrotów. Pojawia się jednak pytanie, jakie działania promocyjne są najlepsze dla firmy. Pakiet MarkRankR wspomaga menedżerów w podejmowaniu najlepszych decyzji, które są oparte na głębokiej analizie, a nie na czuciu.
+        </p>
+        <div class="mt-6 grid gap-3 sm:grid-cols-3">
+          <div class="rounded border border-slate-200 bg-slate-50 p-4">
+            <p class="text-xs font-semibold uppercase text-slate-500">Problem</p>
+            <p class="mt-2 text-sm text-slate-700">Żeby zrozumieć, jaki rodzaj działań promocyjnych będzie dla sprzedawcy najkorzystniejszy, porównujemy 4 główne rodzaje promocji.</p>
+          </div>
+          <div class="rounded border border-slate-200 bg-slate-50 p-4">
+            <p class="text-xs font-semibold uppercase text-slate-500">Użytkownik</p>
+            <p class="mt-2 text-sm text-slate-700">Menedżerowie marketingu potrzebują narzędzia, które pozwoli im w sposób obiektywny porównać skuteczność różnych promocji.</p>
+          </div>
+          <div class="rounded border border-slate-200 bg-slate-50 p-4">
+            <p class="text-xs font-semibold uppercase text-slate-500">Wynik</p>
+            <p class="mt-2 text-sm text-slate-700">Ranking pokazuje najlepszą promocję, która w największym stopniu pomoże osiągnąć cel biznesowy.</p>
+          </div>
+        </div>
+      </div>
+
+      <aside class="rounded border border-slate-200 bg-white p-6 shadow-sm">
+        <h2 class="text-lg font-bold text-slate-950">Co ma zobaczyć recenzent?</h2>
+        <ul class="mt-4 space-y-3 text-sm leading-6 text-slate-600">
+          <li><strong class="text-slate-800">1.</strong> Jak zainstalować pakiet.</li>
+          <li><strong class="text-slate-800">2.</strong> Jak wyglądają dane wejściowe.</li>
+          <li><strong class="text-slate-800">3.</strong> Jak dane są zamieniane na ocenę rozmytą.</li>
+          <li><strong class="text-slate-800">4.</strong> Skąd biorą się wagi kryteriów.</li>
+          <li><strong class="text-slate-800">5.</strong> Która alternatywa wygrywa i czy wynik jest stabilny.</li>
+        </ul>
+      </aside>
+    </section>
+
+    <section id="dane" class="mt-10 grid gap-6 lg:grid-cols-2">
+      <div class="rounded border border-slate-200 bg-white p-6 shadow-sm">
+        <p class="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-sky-700">Sekcja 2</p>
+        <h2 class="text-2xl font-bold text-slate-950">Dane wejściowe</h2>
+        <p class="mt-3 text-sm leading-6 text-slate-600">
+          Pokażcie mały wycinek danych. Wystarczą 4-6 alternatyw i kilka kryteriów.
+          W prostym języku wyjaśnijcie, czym jest alternatywa, kto wystawia oceny i co oznaczają kryteria.
+        </p>
+        <div class="mt-5 overflow-x-auto">
+          <table class="w-full min-w-[560px] text-left text-sm">
+            <thead class="border-y border-slate-200 bg-slate-50 text-xs uppercase text-slate-500">
+              <tr>
+                <th class="px-4 py-3">Alternatywa</th>
+                <th class="px-4 py-3">Koszt wdrodzenia</th>
+                <th class="px-4 py-3">Wzrost sprzedaży</th>
+                <th class="px-4 py-3">Lojalność klientów</th>
+                <th class="px-4 py-3">Atrakcyjność klienta</th>
+                <th class="px-4 py-3">Łatwość realizacji</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr>
+                <td class="px-4 py-3 font-medium">Rabat</td>
+                <td class="px-4 py-3">5687.853</td>
+                <td class="px-4 py-3">4</td>
+                <td class="px-4 py-3">1</td>
+                <td class="px-4 py-3">7</td>
+                <td class="px-4 py-3">5</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 font-medium">Konkurs</td>
+                <td class="px-4 py-3">11347.918</td>
+                <td class="px-4 py-3">6</td>
+                <td class="px-4 py-3">5</td>
+                <td class="px-4 py-3">5</td>
+                <td class="px-4 py-3">1</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 font-medium">Program lojalnościowy</td>
+                <td class="px-4 py-3">51353.538</td>
+                <td class="px-4 py-3">7</td>
+                <td class="px-4 py-3">1</td>
+                <td class="px-4 py-3">5</td>
+                <td class="px-4 py-3">5</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-3 font-medium">Kupony</td>
+                <td class="px-4 py-3">19383.179</td>
+                <td class="px-4 py-3">6</td>
+                <td class="px-4 py-3">1</td>
+                <td class="px-4 py-3">6</td>
+                <td class="px-4 py-3">4</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="rounded border border-slate-200 bg-white p-6 shadow-sm">
+        <p class="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-sky-700">Sekcja 3</p>
+        <h2 class="text-2xl font-bold text-slate-950">Rozmywanie danych</h2>
+        <p class="mt-3 text-sm leading-6 text-slate-600">
+          Wyjaśnijcie, że pojedyncza ocena nie jest traktowana jako idealnie dokładna. Pakiet tworzy trójkę
+          <code class="rounded bg-slate-100 px-1 py-0.5">(l, m, u)</code>: dolną, środkową i górną wartość.
+        </p>
+        <div class="mt-5 rounded border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+          <p><strong>Proste wyjaśnienie:</strong> jeśli ekspert dał ocenę 6, to pakiet pamięta, że realna ocena może być trochę niższa albo trochę wyższa.</p>
+          <p class="mt-2 font-mono text-xs">TFN = (x - 1, x, x + 1), ograniczone do skali 1-9</p>
+          <p class="mt-2 font-mono text-xs">wynik ostry = (l + 4m + u) / 6</p>
+        </div>
+        <div class="chart-box mt-5">
+          <canvas id="templateFuzzyChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-10 grid gap-6 lg:grid-cols-2">
+      <div class="rounded border border-slate-200 bg-white p-6 shadow-sm">
+        <p class="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-sky-700">Sekcja 4</p>
+        <h2 class="text-2xl font-bold text-slate-950">Wagi kryteriów</h2>
+        <p class="mt-3 text-sm leading-6 text-slate-600">
+          Pokażcie, które kryteria miały największy wpływ na ranking. Jeśli używacie wag obiektywnych,
+          napiszcie: "waga wynika z danych, a nie z ręcznej preferencji badacza".
+        </p>
+        <div class="chart-box mt-5">
+          <canvas id="templateWeightsChart"></canvas>
+        </div>
+      </div>
+
+      <div id="wyniki" class="rounded border border-slate-200 bg-white p-6 shadow-sm">
+        <p class="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-sky-700">Sekcja 5</p>
+        <h2 class="text-2xl font-bold text-slate-950">Ranking główny i meta-ranking</h2>
+        <p class="mt-3 text-sm leading-6 text-slate-600">
+          Najpierw pokażcie metodę główną. Potem pokażcie, czy inne metody dają podobne wnioski.
+          Jeżeli metody się różnią, to też jest wynik: oznacza, że problem jest trudny i zależy od sposobu liczenia kompromisu.
+        </p>
+        <div class="mt-5 grid gap-3 sm:grid-cols-2">
+          <div class="rounded border border-emerald-200 bg-emerald-50 p-4">
+            <p class="text-xs font-semibold uppercase text-emerald-700">Najlepsza alternatywa</p>
+            <p class="mt-2 text-2xl font-bold text-emerald-900">Rabat</p>
+          </div>
+          <div class="rounded border border-sky-200 bg-sky-50 p-4">
+            <p class="text-xs font-semibold uppercase text-sky-700">Czy ranking jest stabilny?</p>
+            <p class="mt-2 text-2xl font-bold text-sky-900">Tak</p>
+          </div>
+        </div>
+        <div class="mt-5 rounded border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-600">
+          <!--<p><strong>Do uzupełnienia:</strong> wklejcie obraz wykresu, tabelę APA albo wykres Chart.js z wynikami projektu.</p>-->
+        <iframe src="tabela.html" width="100%" height="450px" frameborder="0"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section id="odtworzenie" class="mt-10 rounded border border-slate-200 bg-white p-6 shadow-sm">
+      <p class="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-sky-700">Sekcja 6</p>
+      <h2 class="text-2xl font-bold text-slate-950">Jak odtworzyć analizę</h2>
+      <p class="mt-3 text-sm leading-6 text-slate-600">
+        Podstawowy przykład użycia pakietu z wykorzystaniem wbudowanych danych.
+      </p>
+      <pre class="mt-5 overflow-x-auto rounded bg-slate-950 p-5 text-sm leading-6 text-slate-100"><code># instalacja
+devtools::install_github("ruzrom/MarkRankR")
+library(MarkRankR)
+
+# dane standardowe
+skladnia <- "
+    Koszt =~ koszt_wdrozenia;
+    Sprzedaz =~ wzrost_sprzedazy;
+    Lojalnosc =~ lojalnosc_klientow;
+    Atrakcyjnosc =~ atrakcyjnosc_klienta;
+    Latwosc =~ latwosc_realizacji
+"
+typy = c("min", "max", "max", "max", "max"),
+bwm_best <- c(3, 1, 6, 4, 8)
+bwm_worst <- c(6, 8, 3, 2, 1)
+
+
+# dane i analiza
+data("promocje_dane_surowe")
+macierz <- przygotuj_dane_mcda(promocje_dane_surowe, skladnia, kolumna_alternatyw = "Alternatywa")
+wynik <- rozmyty_vikor_promo(
+    macierz_decyzyjna = macierz,
+    typy_kryteriow = typy,
+    bwm_najlepsze = bwm_best,
+    bwm_najgorsze = bwm_worst
+)
+plot(wynik)
+tabela_apa(wynik)</code></pre>
+    </section>
+  </main>
+
+  <footer class="mt-12 border-t border-slate-200 bg-white px-4 py-8 text-center text-sm text-slate-500">
+    Roman Ruzhyn, 2026.
+  </footer>
+
+  <script>
+    const baseGrid = { color: '#e5e7eb' };
+    new Chart(document.getElementById('templateFuzzyChart'), {
+      type: 'line',
+      data: {
+        datasets: [{
+          label: 'Przynależność',
+          data: [{x: 4, y: 0}, {x: 5, y: 0}, {x: 6, y: 1}, {x: 7, y: 0}, {x: 8, y: 0}],
+          borderColor: '#0284c7',
+          backgroundColor: 'rgba(2, 132, 199, 0.14)',
+          fill: true,
+          tension: 0,
+          pointRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { type: 'linear', min: 3.5, max: 8.5, grid: baseGrid, title: { display: true, text: 'Ocena' } },
+          y: { min: 0, max: 1.1, grid: baseGrid, title: { display: true, text: 'Stopień przynależności' } }
+        }
+      }
+    });
+
+    new Chart(document.getElementById('templateWeightsChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Koszt wdrodzenia', 'Wzrost sprzedaży', 'Lojalność klientów', 'Atrakcyjność klienta', 'Łatwość realizacji'],
+        datasets: [{
+          label: 'Waga',
+          data: [0.35959095, 0.07983616, 0.16313771, 0.05559715, 0.34183803],
+          backgroundColor: ['#0369a1', '#0f766e', '#64748b', '#94a3b8', '#334155'],
+          borderRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true, grid: baseGrid }, x: { grid: { display: false } } }
+      }
+    });
+  </script>
+</body>
+</html>

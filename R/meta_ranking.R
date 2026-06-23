@@ -71,7 +71,7 @@ rozmyty_meta_ranking <- function(macierz_decyzyjna,
   # 1. Sprawdzenie wag (jesli brak BWM i brak wag recznych -> licz Entropie)
   if (is.null(wagi) && (is.null(bwm_najlepsze) || is.null(bwm_najgorsze))) {
     message("Brak wag i parametrów BWM. Obliczam wagi metodą Entropii...")
-    wagi_surowe <- oblicz_wagi_entropii(macierz_decyzyjna)
+    wagi_surowe <- .oblicz_wagi_entropii(macierz_decyzyjna)
     wagi <- rep(wagi_surowe, each = 3)
   }
 

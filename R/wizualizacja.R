@@ -4,20 +4,33 @@
 #' @importFrom stats median
 #' @keywords internal
 .motyw_mcda <- function() {
+  base_font <- "sans"
+
   list(
-    theme_light(base_size = 12),
-    scale_fill_gradient(low = "#B2BEB5", high = "#228B22"),
-    scale_size_continuous(range = c(4, 16)),
+    theme_light(base_size = 11, base_family = base_font),
+    scale_fill_gradient(low = "#E8F5E9", high = "#1B5E20"),
+    scale_size_continuous(range = c(3, 10)),
     theme(
-      plot.title = element_text(face = "bold", size = 16),
-      plot.subtitle = element_text(color = "grey40", size = 11),
+      plot.title = element_text(face = "bold", size = 14, color = "black", margin = margin(b = 6), family = base_font),
+      plot.subtitle = element_text(color = "grey40", size = 10, margin = margin(b = 12), family = base_font),
+      plot.caption = element_text(color = "grey50", size = 8, family = base_font),
+
+      axis.title = element_text(face = "bold", size = 10, color = "#222222", family = base_font),
+      axis.text = element_text(color = "grey30", size = 9, family = base_font),
+      axis.line = element_line(color = "grey75", linewidth = 0.5),
+
       panel.border = element_rect(color = "black", fill = NA, linewidth = 0.5),
+      panel.grid.major = element_line(color = "grey88", linewidth = 0.5),
+      panel.grid.minor = element_line(color = "grey93", linewidth = 0.3),
+
       legend.position = "right",
-      axis.title = element_text(face = "bold")
+      legend.title = element_text(face = "bold", size = 9, family = base_font),
+      legend.text = element_text(size = 8, family = base_font),
+
+      plot.margin = margin(15, 20, 15, 15)
     )
   )
 }
-
 
 #' Mapa Strategiczna VIKOR
 #'
@@ -48,7 +61,8 @@ plot.rozmyty_vikor_promo_wynik <- function(x, ...) {
   ggplot(df, aes(x = Wydajnosc, y = Def_R)) +
 
     # Tło dla strefy Lidera (Prawa dolna ćwiartka: Duża wydajność, Małe ryzyko)
-    annotate("rect", xmin=srodek_perf, xmax=Inf, ymin=-Inf, ymax=srodek_ryzyko, fill="#E8F5E9", alpha=0.5) +
+    annotate("rect", xmin=srodek_perf, xmax=Inf, ymin=-Inf, ymax=srodek_ryzyko, fill="#88E788", alpha=0.2) +
+    annotate("rect", xmin = -Inf, xmax = srodek_perf, ymin = srodek_ryzyko, ymax = Inf, fill = "#FF7F7F", alpha = 0.2) +
 
     # Linie podziału
     geom_vline(xintercept = srodek_perf, linetype = "dashed", color = "grey50") +
@@ -56,19 +70,20 @@ plot.rozmyty_vikor_promo_wynik <- function(x, ...) {
 
     # Etykiety stref
     annotate("text", x = max(df$Wydajnosc), y = min(df$Def_R), label = "STABILNY LIDER\n(Wysoka Efekt., Niskie Ryzyko)",
-             hjust=1, vjust=0, size=3, fontface="bold.italic", color="#355E3B") +
+             hjust = 1.05, vjust = -0.5, size = 3, fontface = "bold.italic", color = "#2E7D32", family = "sans") +
     annotate("text", x = max(df$Wydajnosc), y = max(df$Def_R), label = "SZANSA\n(Wysoka Efekt., Wysokie Ryzyko)",
-             hjust=1, vjust=0, size=3, fontface="bold.italic", color="#E65100") +
+             hjust = 1.05, vjust = 1.5, size = 3, fontface = "bold.italic", color = "#E65100", family = "sans") +
     annotate("text", x = min(df$Wydajnosc), y = min(df$Def_R), label = "BEZPIECZNA PRZECIĘTNOŚĆ\n(Niska Efekt., Niskie Ryzyko)",
-             hjust=1, vjust=0, size=3, fontface="bold.italic", color="#36454F") +
+             hjust = -0.05, vjust = -0.5, size = 3, fontface = "bold.italic", color = "#37474F", family = "sans") +
     annotate("text", x = min(df$Wydajnosc), y = max(df$Def_R), label = "UNIKAĆ\n(Niska Efekt., Wysokie Ryzyko)",
-             hjust=0, vjust=1, size=3, fontface="italic", color="#B71C1C") +
+             hjust = -0.05, vjust = 1.5, size = 3, fontface = "bold.italic", color = "#C62828", family = "sans") +
 
     # Bąble
     geom_point(aes(size = Rozmiar, fill = Wydajnosc), shape = 21, color = "black", alpha = 0.8) +
     geom_text_repel(aes(label = paste0("Alt ", Alternatywa)), box.padding = 0.5) +
 
-    scale_x_continuous(expand = expansion(mult = 0.2)) +
+    scale_x_continuous(expand = expansion(mult = 0.15)) +
+    scale_y_continuous(expand = expansion(mult = 0.15)) +
 
     labs(
       title = "Mapa Strategiczna VIKOR",
@@ -106,27 +121,30 @@ plot.rozmyty_copras_promo_wynik <- function(x, ...) {
   ggplot(df, aes(x = S_plus_def, y = S_minus_def)) +
 
     annotate("rect", xmin = srodek_x, xmax = Inf, ymin = -Inf, ymax = srodek_y,
-             fill = "#E8F5E9", alpha = 0.5) +
+             fill = "#88E788", alpha = 0.2) +
 
     annotate("rect", xmin = -Inf, xmax = srodek_x, ymin = srodek_y, ymax = Inf,
-             fill = "#FFEBEE", alpha = 0.5) +
+             fill = "#FF7F7F", alpha = 0.2) +
 
     geom_vline(xintercept = srodek_x, linetype = "dashed", color = "grey50") +
     geom_hline(yintercept = srodek_y, linetype = "dashed", color = "grey50") +
 
     annotate("text", x = max(df$S_plus_def), y = min(df$S_minus_def),
              label = "LIDER EFEKTYWNOŚCI\n(Wysoka korzyść, Niski koszt)",
-             hjust = 1, vjust = 0, size = 3, fontface = "bold.italic", color = "#355E3B") +
+             hjust = 1.05, vjust = -0.5, size = 3, fontface = "bold.italic", color = "#2E7D32", family = "sans") +
 
     annotate("text", x = min(df$S_plus_def), y = max(df$S_minus_def),
              label = "NIEOPŁACALNE\n(Niska korzyść, Wysoki koszt)",
-             hjust = 0, vjust = 1, size = 3, fontface = "italic", color = "#B71C1C") +
+             hjust = -0.05, vjust = 1.5, size = 3, fontface = "bold.italic", color = "#C62828", family = "sans") +
 
     # Bąble
     geom_point(aes(size = Rozmiar, fill = Uzytecznosc_Ui),
                shape = 21, color = "black", alpha = 0.8) +
 
     geom_text_repel(aes(label = paste0("Alt ", Alternatywa)), box.padding = 0.5) +
+
+    scale_x_continuous(expand = expansion(mult = 0.15)) +
+    scale_y_continuous(expand = expansion(mult = 0.15)) +
 
     labs(
       title = "Mapa Strategiczna COPRAS",
@@ -177,11 +195,11 @@ plot.rozmyty_topsis_promo_wynik <- function(x, ...) {
     geom_text_repel(aes(label = paste0("Alt ", Alternatywa)), box.padding = 0.5) +
 
 
-    annotate("point", x = cel_x, y = cel_y, shape=18, size=6, color="#FFD700") +
-    annotate("text", x = cel_x, y = cel_y, label="IDEAŁ", vjust=2, size=3.5, fontface="bold") +
+    annotate("point", x = cel_x, y = cel_y, shape=18, size=5, color="#D4AF37") +
+    annotate("text", x = cel_x, y = cel_y, label="IDEAŁ", vjust=1.8, size=3.2, fontface="bold") +
 
-    scale_x_continuous(expand = expansion(mult = c(0.1, 0.2))) +
-    scale_y_continuous(expand = expansion(mult = c(0.2, 0.1))) +
+    scale_x_continuous(expand = expansion(mult = c(0.1, 0.15))) +
+    scale_y_continuous(expand = expansion(mult = c(0.15, 0.1))) +
 
     labs(
       title = "Mapa Strategiczna TOPSIS",
