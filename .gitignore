@@ -7,7 +7,6 @@
 *.Rcheck/
 /man/hello.Rd
 /inst/doc
-/man/figures/
 inst/doc
 /doc/
 /Meta/
