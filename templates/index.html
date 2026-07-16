@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ranking MArketingowy MCDA</title>
+  <title>Ranking Marketingowy MCDA</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
@@ -15,14 +15,24 @@
       min-height: 300px;
       max-height: 460px;
     }
+    .blue-highlight {
+      display: inline-block;
+      border-radius: 0.25rem;
+      background-color: #e0f2fe;
+      padding: 0.125rem 0.5rem;
+      font-size: 0.75rem;
+      line-height: 1rem;
+      font-weight: 600;
+      color: #075985;
+    }
     code, pre { font-variant-ligatures: none; }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 selection:bg-sky-100 selection:text-sky-900">
   <nav class="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
     <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
-      <div class="flex items-center gap-3">
-        <div class="flex h-9 w-9 items-center justify-center rounded bg-sky-700 font-bold text-white">MC</div>
+      <div class="flex items-center gap-4">
+        <div class="flex h-9 w-9 items-center justify-center rounded bg-sky-700 font-bold text-white">RR</div>
         <div>
           <p class="text-sm font-bold uppercase tracking-wide text-slate-900">MarkRankR: Pakiet R wspomagający wybór optymalnych ofert promocyjnych w działaniach marketingowych</p>
           <p class="text-xs text-slate-500">Roman Ruzhyn, 2026</p>
@@ -31,6 +41,7 @@
       <div class="hidden items-center gap-5 text-sm font-medium text-slate-600 md:flex">
         <a href="#problem" class="hover:text-sky-700">Problem</a>
         <a href="#dane" class="hover:text-sky-700">Dane</a>
+        <a href="#wagi" class="hover:text-sky-700">Wagi</a>
         <a href="#wyniki" class="hover:text-sky-700">Wyniki</a>
         <a href="#odtworzenie" class="hover:text-sky-700">Odtworzenie</a>
       </div>
@@ -38,11 +49,11 @@
   </nav>
 
   <main class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-    <section id="problem" class="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+    <section id="problem" class="grid gap-6">
       <div class="rounded border border-slate-200 bg-white p-6 shadow-sm">
-        <p class="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-sky-700">Sekcja 1</p>
+        <p class="mb-3 text-xs font-bold uppercase text-sky-700">Sekcja 1</p>
         <h1 class="text-3xl font-extrabold tracking-tight text-slate-950 sm:text-4xl">MarkRankR w prostym języku</h1>
-        <p class="mt-4 max-w-3xl text-lg leading-8 text-slate-600">
+        <p class="mt-4 text-lg leading-8 text-slate-600">
           W marketingu różnego rodzaju promocje i konkursy to obecnie standard w działaniach mających na celu zwiększenie lojalności klientów i podniesienie obrotów. Pojawia się jednak pytanie, jakie działania promocyjne są najlepsze dla firmy. Pakiet MarkRankR wspomaga menedżerów w podejmowaniu najlepszych decyzji, które są oparte na głębokiej analizie, a nie na czuciu.
         </p>
         <div class="mt-6 grid gap-3 sm:grid-cols-3">
@@ -61,7 +72,7 @@
         </div>
       </div>
 
-      <aside class="rounded border border-slate-200 bg-white p-6 shadow-sm">
+<!--      <aside class="rounded border border-slate-200 bg-white p-6 shadow-sm">
         <h2 class="text-lg font-bold text-slate-950">Co ma zobaczyć recenzent?</h2>
         <ul class="mt-4 space-y-3 text-sm leading-6 text-slate-600">
           <li><strong class="text-slate-800">1.</strong> Jak zainstalować pakiet.</li>
@@ -70,7 +81,7 @@
           <li><strong class="text-slate-800">4.</strong> Skąd biorą się wagi kryteriów.</li>
           <li><strong class="text-slate-800">5.</strong> Która alternatywa wygrywa i czy wynik jest stabilny.</li>
         </ul>
-      </aside>
+      </aside> -->
     </section>
 
     <section id="dane" class="mt-10 grid gap-6 lg:grid-cols-2">
@@ -78,8 +89,16 @@
         <p class="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-sky-700">Sekcja 2</p>
         <h2 class="text-2xl font-bold text-slate-950">Dane wejściowe</h2>
         <p class="mt-3 text-sm leading-6 text-slate-600">
-          Pokażcie mały wycinek danych. Wystarczą 4-6 alternatyw i kilka kryteriów.
-          W prostym języku wyjaśnijcie, czym jest alternatywa, kto wystawia oceny i co oznaczają kryteria.
+          Dane wejściowe to struktura tabelaryczna (ramka danych) zawierająca wyniki oceny różnych typów promocji przez symulacje opinii ekspertów marketingowych.
+          <br>
+          Analizie podlegają <strong>4</strong> alternatywy, którymi są konkretne typy akcji promocyjnych: <u>Rabat, Konkurs, Program Lojalnościowy oraz Kupony</u>.
+          <br>
+          Alternatywy oceniane są na podstawie <strong>5</strong> kryteriów. Obejmują one jeden wskaźnik ilościowy (przewidywany <u>koszt wdrożenia</u> w PLN) oraz cztery wskaźniki jakościowe mierzone na skalach Likerta (<u>wzrost sprzedaży</u>, <u>lojalność klientów</u>, <u>atrakcyjność oferty</u> oraz <u>łatwość realizacji</u>).
+          <br>
+          Każdy wiersz reprezentuje pojedynczą ocenę konkretnej alternatywy dokonaną przez jednego eksperta pod kątem zdefiniowanych kryteriów.
+          <br>
+          Zbiór nie zawiera rzeczywistych wyników z ankiet. Dane są sztuczne - zostały wygenerowane komputerowo za pomocą procedury DGP (Data Generating Process) poprzez losowanie wartości w środowisku R.
+          W modelu występuje <strong>10</strong> wirtualnych ekspertów marketingowych. Każdy wiersz w surowej tabeli to ocena konkretnej promocji wystawiona przez jednego z nich.
         </p>
         <div class="mt-5 overflow-x-auto">
           <table class="w-full min-w-[560px] text-left text-sm">
@@ -133,15 +152,26 @@
 
       <div class="rounded border border-slate-200 bg-white p-6 shadow-sm">
         <p class="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-sky-700">Sekcja 3</p>
-        <h2 class="text-2xl font-bold text-slate-950">Rozmywanie danych</h2>
+        <h2 class="text-2xl font-bold text-slate-950">Przygotowanie danych</h2>
         <p class="mt-3 text-sm leading-6 text-slate-600">
-          Wyjaśnijcie, że pojedyncza ocena nie jest traktowana jako idealnie dokładna. Pakiet tworzy trójkę
-          <code class="rounded bg-slate-100 px-1 py-0.5">(l, m, u)</code>: dolną, środkową i górną wartość.
+          Przetwarzanie surowych danych w gotową macierz decyzyjną opiera się na trzech krokach:
         </p>
+        <ul class="mt-2 list-decimal pl-5 text-sm leading-6 text-slate-600 space-y-2">
+          <li>
+            Algorytm przypisuje zmienne z tabeli do odpowiednich kryteriów przy użyciu czytelnej składni, na przykład <span class="blue-highlight">Sprzedaz =~ wzrost_sprzedazy</span>.
+          </li>
+          <li>
+            System otrzymuje wektor wskazujący kierunek optymalizacji – np. <span class="blue-highlight">c("min", "max", "max", "max", "max")</span>. Dzięki temu wie, że koszty należy minimalizować, a lojalność czy sprzedaż maksymalizować.
+          </li>
+          <li>
+            Rozmycie danych (fuzzifikacja). Ponieważ pojedyncze oceny ignorują ludzką niepewność i tworzą iluzję absolutnej precyzji, algorytm zamienia je na Trójkątne Liczby Rozmyte (TFN). Dzięki temu pojedyncza, dokładna liczba zostaje zastąpiona zakresem trzech wartości <span class="blue-highlight">(l, m, u)</span>.
+          </li>
+        </ul>
         <div class="mt-5 rounded border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
-          <p><strong>Proste wyjaśnienie:</strong> jeśli ekspert dał ocenę 6, to pakiet pamięta, że realna ocena może być trochę niższa albo trochę wyższa.</p>
+          <p><strong>Wyjaśnienie:</strong> Jeśli ekspert przyznał promocji "Rabat" ocenę 6 za atrakcyjność, algorytm nie traktuje tej szóstki jako wartości absolutnej, lecz zakłada, że realna preferencja może być nieco niższa lub wyższa.</p>
           <p class="mt-2 font-mono text-xs">TFN = (x - 1, x, x + 1), ograniczone do skali 1-9</p>
           <p class="mt-2 font-mono text-xs">wynik ostry = (l + 4m + u) / 6</p>
+          <p class="mt-2 text-xs text-slate-500">Wzór zamienia przedział rozmyty z powrotem na jedną, konkretną liczbę. Działa to jak średnia ważona: główna ocena od eksperta (<code>m</code>) jest mnożona przez 4, by miała największy wpływ na wynik. Wartości skrajne (<code>l</code> oraz <code>u</code>) mają znacznie mniejsze znaczenie, dlatego dodaje się je tylko po razie. Następnie całość dzieli się przez 6.</p>
         </div>
         <div class="chart-box mt-5">
           <canvas id="templateFuzzyChart"></canvas>
@@ -149,77 +179,137 @@
       </div>
     </section>
 
-    <section class="mt-10 grid gap-6 lg:grid-cols-2">
+    <section id="wagi" class="mt-10 grid gap-6 lg:grid-cols-2">
       <div class="rounded border border-slate-200 bg-white p-6 shadow-sm">
         <p class="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-sky-700">Sekcja 4</p>
         <h2 class="text-2xl font-bold text-slate-950">Wagi kryteriów</h2>
         <p class="mt-3 text-sm leading-6 text-slate-600">
-          Pokażcie, które kryteria miały największy wpływ na ranking. Jeśli używacie wag obiektywnych,
-          napiszcie: "waga wynika z danych, a nie z ręcznej preferencji badacza".
+          Wagi kryteriów określają relatywne znaczenie analizowanych cech. Pozwalają one algorytmom uwzględnić priorytety decydenta i precyzyjnie ukształtować ostateczny ranking.
+          <br>
+          Wagi kryteriów wynikają z preferencji eksperta, a do ich wyznaczenia zastosowano subiektywną metodę BWM (Best-Worst Method).
+          <br>
+          Metoda BWM to podejście bazujące na celach organizacji, w którym analityk definiuje i ocenia najważniejsze oraz najmniej ważne kryterium.
+          Zgodnie z założoną strategią, w tym modelu zdecydowanym zwycięzcą jest Wzrost sprzedaży.
+
+          <br>
+          <div class="mt-5 rounded border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+            <p class="text-xs">Kolejność kryteriów: <span>Koszt, Sprzedaż (Najlepsze), Lojalność, Atrakcyjność, Łatwość (Najgorsze)</span></p>
+            <p class="mt-2 font-mono text-xs">bwm_best  = c(3, 1, 6, 4, 8) <span class="text-slate-500">/* Jak bardzo Sprzedaż jest ważniejsza od kryterium na danej pozycji (1-9) */</span></p>
+            <p class="mt-1 font-mono text-xs">bwm_worst = c(6, 8, 3, 2, 1) <span class="text-slate-500">/* Jak bardzo kryterium na danej pozycji wygrywa z Łatwością (1-9) */</span></p>
+          <p class="mt-2 text-xs text-slate-500">Na podstawie tych dwóch wektorów algorytm wylicza ostateczne wagi kryteriów.</p>
+          </div>
+
         </p>
         <div class="chart-box mt-5">
           <canvas id="templateWeightsChart"></canvas>
         </div>
       </div>
 
-      <div id="wyniki" class="rounded border border-slate-200 bg-white p-6 shadow-sm">
+      <div id="main_ranking" class="rounded border border-slate-200 bg-white p-6 shadow-sm">
         <p class="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-sky-700">Sekcja 5</p>
-        <h2 class="text-2xl font-bold text-slate-950">Ranking główny i meta-ranking</h2>
-        <p class="mt-3 text-sm leading-6 text-slate-600">
-          Najpierw pokażcie metodę główną. Potem pokażcie, czy inne metody dają podobne wnioski.
-          Jeżeli metody się różnią, to też jest wynik: oznacza, że problem jest trudny i zależy od sposobu liczenia kompromisu.
-        </p>
-        <div class="mt-5 grid gap-3 sm:grid-cols-2">
-          <div class="rounded border border-emerald-200 bg-emerald-50 p-4">
-            <p class="text-xs font-semibold uppercase text-emerald-700">Najlepsza alternatywa</p>
-            <p class="mt-2 text-2xl font-bold text-emerald-900">Rabat</p>
+        <h2 class="text-2xl font-bold text-slate-950">Ranking główny: metoda TOPSIS</h2>
+          <p class="mt-3 text-sm leading-6 text-slate-600">
+            Główną metodą decyzyjną w analizie jest <strong>TOPSIS</strong>.
+            Wybiera ona alternatywę, która znajduje się najbliżej rozwiązania idealnego i jednocześnie najdalej od rozwiązania antyidealnego.
+          </p>
+
+          <ul class="mt-3 list-disc pl-5 text-sm text-slate-600 space-y-1">
+            <li><strong>Wynik końcowy (Bliskość):</strong> Wyraża procentowe podobieństwo do ideału.</li>
+            <li><span class="text-sky-700 font-semibold">Większa wartość = lepszy wybór</span></li>
+            <li>Zdecydowanie wygrywa <strong>Rabat</strong>, uzyskując najwyższy wynik (0.66).</li>
+          </ul>
+
+          <div class="mt-5 rounded border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-600">
+            <iframe src="tabela_topsis.html" width="100%" height="380px" frameborder="0"></iframe>
+            <img src="../man/figures/topsis-plot.png" alt="TOPSIS wynik">
           </div>
-          <div class="rounded border border-sky-200 bg-sky-50 p-4">
-            <p class="text-xs font-semibold uppercase text-sky-700">Czy ranking jest stabilny?</p>
-            <p class="mt-2 text-2xl font-bold text-sky-900">Tak</p>
+      </div>
+    </section>
+
+    <section class="mt-10 rounded border border-slate-200 bg-white p-6 shadow-sm">
+      <div id="wyniki" class="rounded border border-slate-200 bg-white p-6 shadow-sm">
+        <p class="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-sky-700">Sekcja 6</p>
+        <h2 class="text-2xl font-bold text-slate-950">Meta-ranking</h2>
+          <p class="mt-2 text-sm leading-6 text-slate-600">
+            Wyniki z trzech algorytmów (TOPSIS, COPRAS, VIKOR) zestawiono ze sobą przy użyciu <strong>teorii dominacji</strong>. Polega ona na analizie bezpośrednich pojedynków między alternatywami we wszystkich rankingach jednocześnie. Jeśli opcja A zajmuje wyższe miejsce niż opcja B w większości metod, uznaje się, że A "dominuje" nad B.
+          </p>
+
+          <div class="mt-3 rounded border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700 space-y-3">
+            <p>
+              Niezależnie od metody, <em>Konkurs</em> zawsze zajmuje ostatnie miejsce, a <em>Program Lojalnościowy</em> przedostatnie. Metoda <u>COPRAS</u>, podobnie jak <u>TOPSIS</u>, stawia <strong>Rabat</strong> na pierwszym miejscu.
+            </p>
+            <p>
+              Jedyny odmienny wynik dała metoda <u>VIKOR</u>, która postawiła na pierwszym miejscu <em>Kupony</em>. VIKOR szuka tzw. twardego kompromisu – to oznacza, że <em>Kupony</em> są opcją "bezpieczniejszą", która nie ma krytycznie słabych ocen kryteriów.
+            </p>
+            <p class="mt-4 border-t border-slate-200 pt-3 text-sky-800 font-semibold">
+              Ostateczny werdykt: Meta-ranking (zbierający głosy ze wszystkich algorytmów) wskazał ostatecznie Rabat jako najlepszą i najbardziej zyskowną formę promocji, z Kuponami jako silną, bezpieczną alternatywą (miejsce drugie).
+            </p>
           </div>
-        </div>
-        <div class="mt-5 rounded border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-600">
-          <!--<p><strong>Do uzupełnienia:</strong> wklejcie obraz wykresu, tabelę APA albo wykres Chart.js z wynikami projektu.</p>-->
-        <iframe src="tabela.html" width="100%" height="450px" frameborder="0"></iframe>
-        </div>
+          <div class="mt-5 grid gap-3 sm:grid-cols-2">
+            <div class="rounded border border-emerald-200 bg-emerald-50 p-4">
+              <p class="text-xs font-semibold uppercase text-emerald-700">Najlepsza alternatywa</p>
+              <p class="mt-2 text-2xl font-bold text-emerald-900">Rabat</p>
+            </div>
+            <div class="rounded border border-sky-200 bg-sky-50 p-4">
+              <p class="text-xs font-semibold uppercase text-sky-700">Czy ranking jest stabilny?</p>
+              <p class="mt-2 text-2xl font-bold text-sky-900">Tak</p>
+            </div>
+          </div>
+          <div class="mt-5 rounded border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-600">
+            <iframe src="tabela_meta_ranking.html" width="100%" height="400px" frameborder="0"></iframe>
+          </div>
       </div>
     </section>
 
     <section id="odtworzenie" class="mt-10 rounded border border-slate-200 bg-white p-6 shadow-sm">
-      <p class="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-sky-700">Sekcja 6</p>
+      <p class="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-sky-700">Sekcja 7</p>
       <h2 class="text-2xl font-bold text-slate-950">Jak odtworzyć analizę</h2>
       <p class="mt-3 text-sm leading-6 text-slate-600">
         Podstawowy przykład użycia pakietu z wykorzystaniem wbudowanych danych.
       </p>
-      <pre class="mt-5 overflow-x-auto rounded bg-slate-950 p-5 text-sm leading-6 text-slate-100"><code># instalacja
-devtools::install_github("ruzrom/MarkRankR")
-library(MarkRankR)
+      <pre class="mt-5 overflow-x-auto rounded bg-slate-950 p-5 text-sm leading-6 text-slate-100">
+        <code>
+          # instalacja
+          devtools::install_github("ruzrom/MarkRankR")
+          library(MarkRankR)
 
-# dane standardowe
-skladnia <- "
-    Koszt =~ koszt_wdrozenia;
-    Sprzedaz =~ wzrost_sprzedazy;
-    Lojalnosc =~ lojalnosc_klientow;
-    Atrakcyjnosc =~ atrakcyjnosc_klienta;
-    Latwosc =~ latwosc_realizacji
-"
-typy = c("min", "max", "max", "max", "max"),
-bwm_best <- c(3, 1, 6, 4, 8)
-bwm_worst <- c(6, 8, 3, 2, 1)
+          # dane standardowe
+          skladnia <- "
+              Koszt =~ koszt_wdrozenia;
+              Sprzedaz =~ wzrost_sprzedazy;
+              Lojalnosc =~ lojalnosc_klientow;
+              Atrakcyjnosc =~ atrakcyjnosc_klienta;
+              Latwosc =~ latwosc_realizacji
+          "
+
+          # kolejność kryteriów: Koszt, Sprzedaz, Lojalnosc, Atrakcyjnosc, Latwosc
+          typy = c("min", "max", "max", "max", "max")
+          bwm_best <- c(3, 1, 6, 4, 8)
+          bwm_worst <- c(6, 8, 3, 2, 1)
 
 
-# dane i analiza
-data("promocje_dane_surowe")
-macierz <- przygotuj_dane_mcda(promocje_dane_surowe, skladnia, kolumna_alternatyw = "Alternatywa")
-wynik <- rozmyty_vikor_promo(
-    macierz_decyzyjna = macierz,
-    typy_kryteriow = typy,
-    bwm_najlepsze = bwm_best,
-    bwm_najgorsze = bwm_worst
-)
-plot(wynik)
-tabela_apa(wynik)</code></pre>
+          # dane i analiza
+          data("promocje_dane_surowe")
+          macierz <- przygotuj_dane_mcda(promocje_dane_surowe, skladnia, kolumna_alternatyw = "Alternatywa")
+
+          wynik_topsis <- rozmyty_topsis_promo(
+              macierz_decyzyjna = macierz,
+              typy_kryteriow = typy,
+              bwm_najlepsze = bwm_best,
+              bwm_najgorsze = bwm_worst
+          )
+          plot(wynik_topsis)
+          tabela_apa(wynik_topsis)
+
+          wynik <- rozmyty_meta_ranking(
+              macierz_decyzyjna = macierz,
+              typy_kryteriow = typy,
+              bwm_najlepsze = bwm_best,
+              bwm_najgorsze = bwm_worst
+          )
+          tabela_apa(wynik)
+        </code>
+      </pre>
     </section>
   </main>
 
@@ -259,7 +349,7 @@ tabela_apa(wynik)</code></pre>
         labels: ['Koszt wdrodzenia', 'Wzrost sprzedaży', 'Lojalność klientów', 'Atrakcyjność klienta', 'Łatwość realizacji'],
         datasets: [{
           label: 'Waga',
-          data: [0.35959095, 0.07983616, 0.16313771, 0.05559715, 0.34183803],
+          data: [0.20, 0.50, 0.10, 0.15, 0.05],
           backgroundColor: ['#0369a1', '#0f766e', '#64748b', '#94a3b8', '#334155'],
           borderRadius: 4
         }]
@@ -271,6 +361,7 @@ tabela_apa(wynik)</code></pre>
         scales: { y: { beginAtZero: true, grid: baseGrid }, x: { grid: { display: false } } }
       }
     });
+
   </script>
 </body>
 </html>
